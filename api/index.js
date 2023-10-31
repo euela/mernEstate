@@ -1,5 +1,14 @@
 import express from 'express';
-const app = express();
+import mongoose from 'mongoose';
+
+mongoose.connect('mongodb://localhost/delala').then(()=>{
+    console.log('Connected to database')
+    }).catch((err)=>{
+        console.log('error connecting',err)
+    })
+
+    
+const app = express()
 
 app.listen(3000,()=>{
     console.log('sever is running on port 3000!!')
