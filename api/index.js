@@ -1,19 +1,46 @@
+import { config } from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
-import userRouter from './routes/user.routes.js';
+import userRouter from './routes/userRoutes.js';
+import authRouter from './routes/authRoutes.js';
 
-mongoose.connect('mongodb://localhost/delala').then(()=>{
-    console.log('Connected to database')
-    }).catch((err)=>{
-        console.log('error connecting',err)
-    })
+config();
 
-    
-const app = express()
+const app = express();
+app.use(express.json());
 
-app.listen(3000,()=>{
-    console.log('sever is running on port 3000!!')
-});
+app.use((req,res,next)=>{
+    console.log(req.path,req.method)
+    next()
+})
 
 
+mongoose.connect('mongodb://127.0.0.1/delala', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connected to database');
+    app.listen(process.env.PORT, () => {
+      console.log(`Connected on port: ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log('Error connecting:', err);
+  });
+
+app.get('/api/test',(req,res)=>{
+    res.send('heelo world')
+})
+
+app.use('/api/auth',authRouter)
 app.use('/api/user', userRouter)
+
+
+
+
+
+
+
+
+
+
+
+
